@@ -4,6 +4,7 @@
 public abstract class Paddle : MonoBehaviour
 {
     protected Rigidbody2D rb;
+    private Vector3 initialScale;
 
     public float speed = 8f;
     [Tooltip("Changes how the ball bounces off the paddle depending on where it hits the paddle. The further from the center of the paddle, the steeper the bounce angle.")]
@@ -12,12 +13,28 @@ public abstract class Paddle : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        initialScale = transform.localScale;
     }
 
     public void ResetPosition()
     {
         rb.linearVelocity = Vector2.zero;
         rb.position = new Vector2(rb.position.x, 0f);
+        transform.localScale = initialScale;
+    }
+
+    public void Stretch(float scaleMultiplier)
+    {
+        Vector3 stretchedScale = initialScale;
+        stretchedScale.y *= scaleMultiplier;
+        transform.localScale = stretchedScale;
+    }
+
+    public void Shrink(float scaleMultiplier)
+    {
+        Vector3 shrunkenScale = initialScale;
+        shrunkenScale.y *= scaleMultiplier;
+        transform.localScale = shrunkenScale;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
